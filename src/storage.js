@@ -31,7 +31,11 @@ const todoStorageController = (() => {
         localStorage.removeItem(projectName);
     }
 
-    return { updateItem, removeItem };
+    const clearStorage = () => {
+        localStorage.clear();
+    }
+
+    return { updateItem, removeItem, clearStorage };
 })();
 
 export default todoStorageController;

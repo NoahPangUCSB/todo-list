@@ -1,33 +1,125 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
 :root {
-    --header-background: #67e8f9;
+  --header-background: #67e8f9;
+  --sidebar-background: #e2e8f0;
+  --shadow-color: #94a3b8;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    padding: 0;
-    margin: 0;
-    overflow: scroll;
-    font-family: Roboto, sans-serif;
+  display: flex;
+  flex-direction: column;
+  /* min-height: 100vh; */
+  padding: 0;
+  margin: 0;
+  overflow: auto;
+  font-family: Roboto, sans-serif;
 }
 
 .header {
-    background-color: var(--header-background);
-    height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background-color: var(--header-background);
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .app-title {
-    font-weight: bold;
-    font-size: xx-large;
+  font-weight: bold;
+  font-size: xx-large;
 }
 
 .content {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
+  display: grid;
+  grid-template-columns: 2fr 5fr;
+}
+
+.project-sidebar {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  gap: 10px;
+  background-color: var(--sidebar-background);
+  overflow-y: auto;
+}
+
+.projects-header,
+.projects-wrapper,
+.add-project-btn {
+  margin-left: 20px;
+}
+
+.projects-header {
+  font-weight: bold;
+  font-size: xx-large;
+  margin-top: 10px;
+}
+
+.projects-wrapper {
+  display: grid;
+  gap: 10px;
+}
+
+.project-card {
+  width: 80%;
+  border: solid;
+  word-break: break-all;
+  /* overflow-wrap: break-word; */
+  padding: 10px;
+  font-size: large;
+  display: flex;
+  gap: 5px;
+}
+
+.selected-project {
+    background-color: #94a3b8;
+}
+
+.project-card svg {
+  width: 8%;
+  flex-shrink: 0;
+}
+
+.add-project-btn-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.add-project-btn {
+  position: relative;
+  justify-self: center;
+  font-size: 100px;
+  border-radius: 100%;
+  height: 40px;
+  width: 40px;
+  vertical-align: middle;
+  border: hidden;
+  margin: 4px;
+  padding: 10px;
+  background: none;
+  /* box-shadow: 0px 0px 7px var(--shadow-color); */
+}
+
+.add-project-btn::before,
+.add-project-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: black;
+}
+
+.add-project-btn::before {
+  width: 4px;
+  margin: 10px auto;
+}
+.add-project-btn::after {
+  margin: auto 10px;
+  height: 4px;
+}
+
+.add-project-btn:hover {
+  transform: scale(1.25) perspective(1px);
 }
