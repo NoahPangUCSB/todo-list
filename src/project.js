@@ -41,7 +41,7 @@ const project = () => {
     }
 
     const createTask = (title, desc=null, dueDate=null, notes=null, priority=0) => {
-        if(!(title in tasks)) {
+        if(title && !(title in tasks)) {
             const newTask = task();
             newTask.setTitle(title);
             newTask.setDesc(desc);

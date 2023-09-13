@@ -67,7 +67,8 @@ body {
   /* overflow-wrap: break-word; */
   padding: 10px;
   font-size: large;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
   gap: 5px;
 }
 
@@ -76,16 +77,19 @@ body {
 }
 
 .project-card svg {
-  width: 8%;
+    grid-column: 1;
+  width: 50%;
   flex-shrink: 0;
+  align-self: center;
+  justify-self: center;
 }
 
-.add-project-btn-wrapper {
+.add-project-btn-wrapper, .add-task-btn-wrapper {
   display: flex;
   justify-content: center;
 }
 
-.add-project-btn {
+.add-project-btn, .add-task-btn {
   position: relative;
   justify-self: center;
   font-size: 100px;
@@ -101,7 +105,8 @@ body {
 }
 
 .add-project-btn::before,
-.add-project-btn::after {
+.add-project-btn::after, .add-task-btn::before,
+.add-task-btn::after  {
   content: "";
   position: absolute;
   top: 0;
@@ -111,15 +116,110 @@ body {
   background: black;
 }
 
-.add-project-btn::before {
+.add-project-btn::before, .add-task-btn::before {
   width: 4px;
   margin: 10px auto;
 }
-.add-project-btn::after {
+.add-project-btn::after, .add-task-btn::after {
   margin: auto 10px;
   height: 4px;
 }
 
-.add-project-btn:hover {
+.add-project-btn:hover, .add-task-btn:hover {
   transform: scale(1.25) perspective(1px);
+}
+
+
+.project-view {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    align-items: center;
+    gap: 20px;
+}
+
+.project-name-display {
+    font-size: xx-large;
+    font-weight: bold;
+    justify-self: center;
+    overflow-wrap: anywhere;
+}
+
+.task-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.task-card {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    border: solid;
+    padding: 10px;
+    width: 70%;
+    overflow-wrap: anywhere;
+}
+
+.check-btn {
+    width: 20px;
+    flex-shrink: 0;
+}
+
+.task-card span {
+    font-size: large;
+}
+
+.hovered-project {
+    background-color: #94a3b8;
+}
+
+.delete-project-btn {
+    grid-column: 3;
+    align-self: center;
+    margin-left: 5px;
+    justify-self: end;
+    border: hidden;
+    width: 25px;
+    height: 25px;
+    position: relative;
+    margin: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    background: none;
+  }
+  
+  .delete-project-btn::before,
+  .delete-project-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    content: "";
+    background: black;
+    margin: auto 4px;
+    height: 2px;
+    transform: rotateZ(45deg);
+  
+  }
+  
+  .delete-project-btn::after {
+    transform: rotateZ(-45deg);
+  }
+
+.add-project-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    width: 70%;
+    align-self: center;
+    gap: 5px;
+}
+
+#add-project-name-input {
+    grid-column: 1 / 3;
 }
