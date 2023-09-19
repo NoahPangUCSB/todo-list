@@ -84,6 +84,19 @@ const displayController = (() => {
         projectController.deleteProject(projectName);
         thisProject.parentElement.removeChild(thisProject);
     }
+    
+    const removeTask = (e) => {
+        let thisTask = e.srcElement;
+        while(!thisTask.classList.contains("task-card")) {
+            thisTask = thisTask.parentElement;
+        }
+
+        const projectName = document.querySelector(".project-name-display").textContent;
+    
+        const taskName = thisTask.textContent;
+        projectController.removeTask(projectName, taskName);
+        thisTask.parentElement.removeChild(thisTask);
+    }
 
     const hoverProject = (e) => {
 
@@ -103,6 +116,21 @@ const displayController = (() => {
 
     }
 
+    const hoverTask = (e) => {
+        let thisTask = e.srcElement;
+        while(!thisTask.classList.contains("task-card")) {
+            thisTask = thisTask.parentElement;
+        }
+
+        thisTask.classList.add("hovered-task");
+        if(!document.querySelector(".delete-task-btn")){
+            const deleteBtn = document.createElement("button");
+            deleteBtn.classList.add("delete-task-btn");
+            deleteBtn.addEventListener("click", removeTask);
+            thisTask.appendChild(deleteBtn);
+        }
+    }
+
     const unhoverProject = (e) => {
         let thisProject = e.srcElement;
         while(!thisProject.classList.contains("project-card")) {
@@ -112,6 +140,17 @@ const displayController = (() => {
         thisProject.classList.remove("hovered-project");
         const deleteBtn = document.querySelector(".delete-project-btn");
         thisProject.removeChild(deleteBtn);
+    }
+
+    const unhoverTask = (e) => {
+        let thisTask = e.srcElement;
+        while(!thisTask.classList.contains("task-card")) {
+            thisTask = thisTask.parentElement;
+        }
+
+        thisTask.classList.remove("hovered-task");
+        const deleteBtn = document.querySelector(".delete-task-btn");
+        thisTask.removeChild(deleteBtn);
     }
 
     const displayProjectCard = (project, projectsWrapper) => {
@@ -187,7 +226,9 @@ const displayController = (() => {
         const taskCard = document.createElement("div");
         taskCard.classList.add("task-card");
 
-        
+        taskCard.addEventListener("mouseover", hoverTask);
+        taskCard.addEventListener("mouseleave", unhoverTask);
+
         const checkBtn = document.createElement("div");
         checkBtn.classList.add("check-btn");
         checkBtn.classList.add("unchecked");

@@ -154,13 +154,14 @@ body {
 }
 
 .task-card {
-    display: flex;
+    display: grid;
     gap: 10px;
     align-items: center;
     border: solid;
     padding: 10px;
     width: 70%;
     overflow-wrap: anywhere;
+    grid-template-columns: 1fr 8fr 1fr;
 }
 
 .check-btn {
@@ -176,7 +177,7 @@ body {
     background-color: #94a3b8;
 }
 
-.delete-project-btn {
+.delete-project-btn, .delete-task-btn {
     grid-column: 3;
     align-self: center;
     margin-left: 5px;
@@ -192,7 +193,9 @@ body {
   }
   
   .delete-project-btn::before,
-  .delete-project-btn::after {
+  .delete-project-btn::after,
+  .delete-task-btn::before,
+  .delete-task-btn::after {
     content: "";
     position: absolute;
     top: 0;
@@ -207,7 +210,7 @@ body {
   
   }
   
-  .delete-project-btn::after {
+  .delete-project-btn::after, .delete-task-btn::after {
     transform: rotateZ(-45deg);
   }
 
