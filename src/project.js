@@ -97,9 +97,11 @@ const projectController = (() => {
 
     const addTask = (projectName, title, desc=null, dueDate=null, notes=null, priority=0) => {
         const project = projects[projectName];
-        project.createTask(title, desc, notes, dueDate, priority);
+        const addTaskSuccess = project.createTask(title, desc, notes, dueDate, priority);
 
         storageController.updateItem(project);
+
+        return addTaskSuccess;
     }
 
     const removeTask = (projectName, taskTitle) => {
@@ -124,7 +126,7 @@ const projectController = (() => {
             const projectTasks = projectObject["tasks"]
             const project = createProject(projectName, projectObject["desc"], projectObject["notes"], projectObject["dueDate"]);
             for(const task in projectTasks) {
-                addTask(projectName, task["title"], task["desc"], task["dueDate"], task["notes"], task["priority"]);
+                addTask(projectName, projectTasks[task]["title"], task["desc"], task["dueDate"], task["notes"], task["priority"]);
             }
         }
 

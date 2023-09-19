@@ -24,39 +24,6 @@ const displayController = (() => {
         const projectView = document.createElement("div");
         projectView.classList.add("project-view");
 
-        projectController.createProject("hsdasdfdfjkdsjfsdjfsdidfjsdfjisdfijsfdsdfdsfsdsjklssfkjdsllksfjsfdjklsfkdjlfjsdklijsodfsdfij", "asdshfufas", null, null, {
-            "sda": {
-                title: "sda",
-                desc: "saf",
-                notes: "Saddas",
-                dueDate: "dsadas",
-                priority: 0
-            },
-            "sdfdfdf'l's;'ld;';'ldl';gl;'fl;'f;glfdgfdjgsdjkgsdfjgdsklgjdgkdlskldgsklsdgklsdgjklgdskljs": {
-                title: "sdfdfdf'l's;'ld;';'ldl';gl;'fl;'f;glfdgfdjgsdjkgsdfjgdsklgjdgkdlskldgsklsdgklsdgjklgdskljs",
-                desc: "saf",
-                notes: "Saddas",
-                dueDate: "dsadas",
-                priority: 0
-            }
-        });
-        projectController.createProject("hsj", "asdss", null, null, {
-            "sda": {
-                title: "sda",
-                desc: "saf",
-                notes: "Saddas",
-                dueDate: "dsadas",
-                priority: 0
-            },
-            "sdfddgklsdgjklgdskljs": {
-                title: "sdfddgklsdgjklgdskljs",
-                desc: "saf",
-                notes: "Saddas",
-                dueDate: "dsadas",
-                priority: 0
-            }
-        });
-
         contentWrapper.appendChild(projectSidebar);
         contentWrapper.appendChild(projectView);
 
@@ -188,6 +155,7 @@ const displayController = (() => {
 
         const addTaskBtnWrapper = document.createElement("div");
         addTaskBtnWrapper.classList.add("add-task-btn-wrapper");
+        addTaskBtnWrapper.addEventListener("click", addTask);
         const addTaskBtn = document.createElement("button");
         addTaskBtn.classList.add("add-task-btn");
         addTaskBtnWrapper.appendChild(addTaskBtn);
@@ -236,6 +204,23 @@ const displayController = (() => {
         taskWrapper.appendChild(taskCard);
     }
 
+    const addTask = (e) => {
+        let addTaskButton = e.srcElement;
+        while(!addTaskButton.classList.contains("add-task-btn-wrapper")) {
+            addTaskButton = addTaskButton.parentElement;
+        }
+        let projectView = e.srcElement;
+        while(!projectView.classList.contains("project-view")) {
+            projectView = projectView.parentElement;
+        }
+
+        projectView.removeChild(addTaskButton);
+
+        const addTaskForm = taskProjectForm("task");
+
+        projectView.appendChild(addTaskForm);
+    }
+
     const addProject = (e) => {
         let addProjectButton = e.srcElement;
         while(!addProjectButton.classList.contains("add-project-btn-wrapper")) {
@@ -248,30 +233,36 @@ const displayController = (() => {
 
         sidebar.removeChild(addProjectButton);
 
-        const addProjectForm = document.createElement("form");
-        addProjectForm.classList.add("add-project-form");
-
-        const addProjectNameInput = document.createElement("input");
-        addProjectNameInput.id = "add-project-name-input";
-        addProjectNameInput.setAttribute("placeholder", "My Project");
-        addProjectNameInput.addEventListener("keypress", appController.submitProject);
-
-
-        const cancelAddProjectBtn = document.createElement("button");
-        cancelAddProjectBtn.classList.add("cancel-add-project");
-        cancelAddProjectBtn.textContent = "Cancel";
-        cancelAddProjectBtn.addEventListener("click", hideProjectForm);
-
-        const addProjectSubmitBtn = document.createElement("button");
-        addProjectSubmitBtn.classList.add("submit-project");
-        addProjectSubmitBtn.textContent = "Submit";
-        addProjectSubmitBtn.addEventListener("click", appController.submitProject);
-
-        addProjectForm.appendChild(addProjectNameInput);
-        addProjectForm.appendChild(cancelAddProjectBtn);
-        addProjectForm.appendChild(addProjectSubmitBtn);
+        const addProjectForm = taskProjectForm("project");
 
         sidebar.appendChild(addProjectForm);
+    }
+
+    const taskProjectForm = (type) => {
+        const addForm = document.createElement("form");
+        addForm.classList.add(`add-${type}-form`);
+
+        const addNameInput = document.createElement("input");
+        addNameInput.id = `add-${type}-name-input`;
+        addNameInput.setAttribute("placeholder", `My ${type}`);
+        addNameInput.addEventListener("keypress", type === "project" ? appController.submitProject : appController.submitTask);
+
+
+        const cancelAddBtn = document.createElement("button");
+        cancelAddBtn.classList.add(`cancel-add-${type}`);
+        cancelAddBtn.textContent = "Cancel";
+        cancelAddBtn.addEventListener("click", type === "project" ? hideProjectForm : hideTaskForm);
+
+        const addSubmitBtn = document.createElement("button");
+        addSubmitBtn.classList.add(`submit-${type}`);
+        addSubmitBtn.textContent = "Submit";
+        addSubmitBtn.addEventListener("click", type === "project" ? appController.submitProject : appController.submitTask);
+
+        addForm.appendChild(addNameInput);
+        addForm.appendChild(cancelAddBtn);
+        addForm.appendChild(addSubmitBtn);
+
+        return addForm;
     }
 
     const hideProjectForm = () => {
@@ -290,7 +281,23 @@ const displayController = (() => {
         sidebar.appendChild(addProjectBtnWrapper);
     }
 
-    return { displayProjectsSidebar, displayProjectCard, hideProjectForm };
+    const hideTaskForm = () => {
+        const addTaskForm = document.querySelector(".add-task-form");
+        const projectView = document.querySelector(".project-view");
+        projectView.removeChild(addTaskForm);
+
+        const addTaskBtnWrapper = document.createElement("div");
+        addTaskBtnWrapper.classList.add("add-task-btn-wrapper");
+
+        const addTaskButton = document.createElement("button");
+        addTaskButton.classList.add("add-task-btn");
+        addTaskBtnWrapper.appendChild(addTaskButton);
+        addTaskBtnWrapper.addEventListener("click", addTask);
+
+        projectView.appendChild(addTaskBtnWrapper);
+    }
+
+    return { displayProjectsSidebar, displayProjectCard, hideProjectForm, displayTask, hideTaskForm };
 })();
 
 const appController = (() => {
@@ -318,5 +325,26 @@ const appController = (() => {
         }
     }
 
-    return {submitProject};
+    const submitTask = (e) => {
+        if(e.type === "click" || e.key === "Enter") {
+            e.preventDefault();
+            const formInput = document.querySelector("#add-task-name-input");
+            const taskName = formInput.value;
+            const projectName = document.querySelector(".project-name-display").textContent;
+            const createTaskSuccess = projectController.addTask(projectName, taskName);
+            
+            const taskWrapper = document.querySelector(".task-wrapper");
+            const projects = projectController.getProjects();
+            const task = projects[projectName].getTasks()[taskName];
+            
+            if(createTaskSuccess) {
+                displayController.displayTask(taskWrapper, task);
+                displayController.hideTaskForm();
+            }
+        
+            return createTaskSuccess ? taskName : null;
+        }
+    }
+
+    return {submitProject, submitTask};
 })();
